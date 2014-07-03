@@ -7,9 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Application {
 
@@ -24,7 +24,7 @@ public class Application {
 
 		Speech.Builder current = null;
 
-		Set<Speech> speeches = new HashSet<>();
+		Set<Speech> speeches = new TreeSet<>();
 		for (String piece : history) {
 			if (hasValue(piece)) {
 				if (piece.equals("END_AI")) {
