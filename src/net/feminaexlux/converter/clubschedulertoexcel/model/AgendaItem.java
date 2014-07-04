@@ -1,6 +1,6 @@
 package net.feminaexlux.converter.clubschedulertoexcel.model;
 
-public class AgendaItem {
+public class AgendaItem implements Comparable<AgendaItem> {
 
 	private final int index;
 	private final String name;
@@ -28,6 +28,39 @@ public class AgendaItem {
 
 	public String getDescription2() {
 		return description2;
+	}
+
+	@Override
+	public int compareTo(final AgendaItem that) {
+		if (that == null) {
+			return 1;
+		}
+
+		return that.index - this.index;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AgendaItem that = (AgendaItem) o;
+
+		if (index != that.index) return false;
+		if (description1 != null ? !description1.equals(that.description1) : that.description1 != null) return false;
+		if (description2 != null ? !description2.equals(that.description2) : that.description2 != null) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = index;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (description1 != null ? description1.hashCode() : 0);
+		result = 31 * result + (description2 != null ? description2.hashCode() : 0);
+		return result;
 	}
 
 	public static class Builder {
