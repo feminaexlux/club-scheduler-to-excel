@@ -10,7 +10,7 @@ public class Speech implements Comparable<Speech>, EasySpeakConvertable {
 	private final String evaluator;
 	private final String title;
 	private final int workbook;
-	private final double assignment;
+	private final int assignment;
 	private final Date date;
 
 	private Speech(final Builder builder) {
@@ -24,7 +24,16 @@ public class Speech implements Comparable<Speech>, EasySpeakConvertable {
 
 	@Override
 	public String toCsv() {
-		return String.format("%s, %d, %s, %s, %5$td%5$tb%5$tY, %6$s", speaker, workbook, String.valueOf(assignment), title, date, evaluator);
+		return String.format("\"%s\", %d, %d, \"%s\", %5$td%5$tb%5$tY, \"%6$s\"",
+				speaker,
+				workbook,
+				assignment,
+				title,
+				date,
+				evaluator)
+				.replace("_", " ")
+				.replace("\"\"", "\"")
+				.replace("\"null\"", "Unknown");
 	}
 
 	@Override
@@ -47,22 +56,28 @@ public class Speech implements Comparable<Speech>, EasySpeakConvertable {
 	@Override
 	public int hashCode() {
 		int result;
-		long temp;
 		result = speaker != null ? speaker.hashCode() : 0;
 		result = 31 * result + (evaluator != null ? evaluator.hashCode() : 0);
 		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + workbook;
-		temp = Double.doubleToLongBits(assignment);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + assignment;
 		result = 31 * result + (date != null ? date.hashCode() : 0);
 		return result;
 	}
 
 	@Override
-	public int compareTo(Speech that) {
+	public int compareTo(final Speech that) {
+		if (speaker == null) {
+			return -1;
+		}
+
+		if (that.speaker == null) {
+			return 1;
+		}
+
 		if (speaker.equals(that.speaker)) {
 			if (workbook == that.workbook) {
-				return (int) (assignment - that.assignment);
+				return assignment - that.assignment;
 			}
 
 			return workbook - that.workbook;
@@ -76,7 +91,7 @@ public class Speech implements Comparable<Speech>, EasySpeakConvertable {
 		private String evaluator;
 		private String title;
 		private int workbook;
-		private double assignment;
+		private int assignment;
 		private Date date;
 
 		public Builder speaker(String speaker) {
@@ -99,7 +114,7 @@ public class Speech implements Comparable<Speech>, EasySpeakConvertable {
 			return this;
 		}
 
-		public Builder assignment(double assignment) {
+		public Builder assignment(int assignment) {
 			this.assignment = assignment;
 			return this;
 		}
